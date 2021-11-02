@@ -28,6 +28,10 @@ import (
 func (app *BaseApp) InitChain(req abci.RequestInitChain) (res abci.ResponseInitChain) {
 	// On a new chain, we consider the init chain block height as 0, even though
 	// req.InitialHeight is 1 by default.
+	fmt.Println("")
+	fmt.Println("req.Time")
+	fmt.Println(req.Time)
+	fmt.Println(" ")
 	initHeader := tmproto.Header{ChainID: req.ChainId, Time: req.Time}
 
 	// If req.InitialHeight is > 1, then we set the initial version in the

@@ -3,15 +3,14 @@ package baseapp
 import (
 	"errors"
 	"fmt"
-	"reflect"
-	"strings"
-
 	"github.com/gogo/protobuf/proto"
 	abci "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/crypto/tmhash"
 	"github.com/tendermint/tendermint/libs/log"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	dbm "github.com/tendermint/tm-db"
+	"reflect"
+	"strings"
 
 	"github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/cosmos/cosmos-sdk/snapshots"
@@ -390,10 +389,15 @@ func (app *BaseApp) setCheckState(header tmproto.Header) {
 // Commit.
 func (app *BaseApp) setDeliverState(header tmproto.Header) {
 	ms := app.cms.CacheMultiStore()
+	fmt.Println("set Deliver State: ")
+	fmt.Println(header)
+	fmt.Println("")
 	app.deliverState = &state{
 		ms:  ms,
 		ctx: sdk.NewContext(ms, header, false, app.logger),
 	}
+
+	fmt.Println(app.deliverState.ctx.BlockTime().UnixNano())
 }
 
 // GetConsensusParams returns the current consensus parameters from the BaseApp's
@@ -521,8 +525,16 @@ func validateBasicTxMsgs(msgs []sdk.Msg) error {
 // otherwise it returns the application's checkstate.
 func (app *BaseApp) getState(mode runTxMode) *state {
 	if mode == runTxModeDeliver {
+		fmt.Println("runTxModeDeliver")
 		return app.deliverState
 	}
+
+	//if app.checkState.ctx.BlockTime().UnixNano() < 1 {
+	//	app.checkState.ctx = app.checkState.ctx.WithBlockTime(time.Now())
+	//}
+
+	fmt.Println("blocktime:")
+	fmt.Println(app.checkState.ctx.BlockTime().UnixNano())
 
 	return app.checkState
 }
@@ -673,6 +685,11 @@ func (app *BaseApp) runTx(mode runTxMode, txBytes []byte) (gInfo sdk.GasInfo, re
 	// is a branch of a branch.
 	runMsgCtx, msCache := app.cacheTxContext(ctx, txBytes)
 
+	fmt.Println("")
+	fmt.Println("------")
+	fmt.Println(runMsgCtx.BlockTime().UnixNano())
+	fmt.Println("-----")
+
 	// Attempt to execute all messages and only update state if all messages pass
 	// and we're in DeliverTx. Note, runMsgs will never return a reference to a
 	// Result if any single message fails or does not have a registered Handler.
@@ -716,6 +733,10 @@ func (app *BaseApp) runMsgs(ctx sdk.Context, msgs []sdk.Msg, mode runTxMode) (*s
 
 		if handler := app.msgServiceRouter.Handler(msg); handler != nil {
 			// ADR 031 request type routing
+			//fmt.Println("")
+			//fmt.Println("------")
+			//fmt.Println(ctx.BlockTime().UnixNano())
+			//fmt.Println("-----")
 			msgResult, err = handler(ctx, msg)
 			eventMsgName = sdk.MsgTypeURL(msg)
 		} else if legacyMsg, ok := msg.(legacytx.LegacyMsg); ok {

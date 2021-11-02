@@ -33,6 +33,11 @@ func initChain(
 ) (mockValidators, time.Time, []simulation.Account, string) {
 
 	appState, accounts, chainID, genesisTimestamp := appStateFn(r, accounts, config)
+
+	fmt.Println("")
+	fmt.Println("Genesis time stamp: ")
+	fmt.Println(genesisTimestamp)
+
 	consensusParams := randomConsensusParams(r, appState, cdc)
 	req := abci.RequestInitChain{
 		AppStateBytes:   appState,
@@ -75,6 +80,13 @@ func SimulateFromSeed(
 	// Second variable to keep pending validator set (delayed one block since
 	// TM 0.24) Initially this is the same as the initial validator set
 	validators, genesisTimestamp, accs, chainID := initChain(r, params, accs, app, appStateFn, config, cdc)
+
+	fmt.Println("GenesisTimestamp:")
+	genesisTimestamp.UnixNano()
+	fmt.Println(genesisTimestamp.After(time.Now()))
+	fmt.Println("")
+
+
 	if len(accs) == 0 {
 		return true, params, fmt.Errorf("must have greater than zero genesis accounts")
 	}
@@ -165,7 +177,7 @@ func SimulateFromSeed(
 		logWriter.AddEntry(BeginBlockEntry(int64(height)))
 		app.BeginBlock(request)
 
-		ctx := app.NewContext(false, header)
+		ctx := app.NewContext(false, header).WithBlockTime(time.Now())
 
 		// Run queued operations. Ignores blocksize if blocksize is too small
 		numQueuedOpsRan := runQueuedOperations(

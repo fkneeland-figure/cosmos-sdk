@@ -87,7 +87,11 @@ func RandomDecAmount(r *rand.Rand, max sdk.Dec) sdk.Dec {
 // RandTimestamp generates a random timestamp
 func RandTimestamp(r *rand.Rand) time.Time {
 	// json.Marshal breaks for timestamps greater with year greater than 9999
-	unixTime := r.Int63n(253373529600)
+	// UnixNano breaks after year 2262
+	now := time.Now().UnixMilli() / 1000
+
+	// Here we calculate a random time between epoch and the year 2220 so that UnixNano will still work for simulations
+	unixTime := r.Int63n(now + 60*60*24*365*200) // sec * minute * hour * days * years
 	return time.Unix(unixTime, 0)
 }
 
