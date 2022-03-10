@@ -9,9 +9,9 @@ require (
 	github.com/btcsuite/btcd v0.22.0-beta
 	github.com/btcsuite/btcutil v1.0.3-0.20201208143702-a53e38424cce
 	github.com/coinbase/rosetta-sdk-go v0.6.10
-	github.com/confio/ics23/go v0.6.6
+	github.com/confio/ics23/go v0.7.0
 	github.com/cosmos/go-bip39 v1.0.0
-	github.com/cosmos/iavl v0.16.0
+	github.com/cosmos/iavl v0.18.0
 	github.com/cosmos/ledger-cosmos-go v0.11.1
 	github.com/enigmampc/btcutil v1.0.3-0.20200723161021-e2fb6adb2a25
 	github.com/gogo/gateway v1.1.0
@@ -43,11 +43,11 @@ require (
 	github.com/tendermint/btcd v0.1.1
 	github.com/tendermint/crypto v0.0.0-20191022145703-50d29ede1e15
 	github.com/tendermint/go-amino v0.16.0
-	github.com/tendermint/tendermint v0.34.13
-	github.com/tendermint/tm-db v0.6.4
-	golang.org/x/crypto v0.0.0-20201221181555-eec23a3978ad
-	google.golang.org/genproto v0.0.0-20210602131652-f16073e35f0c
-	google.golang.org/grpc v1.40.0
+	github.com/tendermint/tendermint v0.35.2
+	github.com/tendermint/tm-db v0.6.6
+	golang.org/x/crypto v0.0.0-20220112180741-5e0467b6c7ce
+	google.golang.org/genproto v0.0.0-20211208223120-3a66f561d7aa
+	google.golang.org/grpc v1.44.0
 	google.golang.org/protobuf v1.27.1
 	gopkg.in/yaml.v2 v2.4.0
 )
